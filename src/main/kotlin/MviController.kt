@@ -8,14 +8,12 @@ abstract class MviController<S : MviState, I : MviIntent<A>, A : MviAction, R : 
     private val actionTransformerKClassList: List<KClass<*>>
 ) {
 
-    private val stateManager: StateManager<S> by lazy { StateManager(initialState) }
-
     private val actionTransformerMap: HashMap<String, ObservableTransformer<A, R>>
             by lazy(LazyThreadSafetyMode.NONE) {
                 actionTransformerKClassList.map { kClass ->
                     val transformer = kClass
                         .primaryConstructor!!
-                        .call(stateManager) as ObservableTransformer<A, R>
+                        .call(StateManager(initialState)) as ObservableTransformer<A, R>
 
                     val actionName = kClass
                         .supertypes[0]

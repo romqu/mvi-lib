@@ -34,7 +34,8 @@ class StateManager<S : MviState> constructor(
     private fun setNewState(newState: S) {
 
         synchronized(this) {
-            state = newState
+
+            if((state == newState).not()) state = newState
         }
     }
 }

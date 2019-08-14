@@ -8,9 +8,9 @@ import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
 
 
-abstract class MviView<C : MviController<*, *, *, *>, I : MviIntent<*>, R : MviResult> {
+abstract class MviView<C : MviController<*, *, *, *>, R : MviResult> {
 
-    abstract var controller: C
+    abstract val controller: C
 
     abstract fun render(result: R)
 }
