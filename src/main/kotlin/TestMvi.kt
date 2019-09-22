@@ -16,7 +16,7 @@ sealed class TestMviAction : MviAction {
 }
 
 sealed class TestMviResult : MviResult {
-    object TestResult : MviResult
+    object TestResult : TestMviResult()
 }
 
 data class TestMviState(
@@ -40,15 +40,27 @@ class TestMviController(
     initialState, actionTransformerKClassList
 )
 
-class TestMviView: MviView<TestMviController, TestMviIntent<TestMviAction>, TestMviResult>() {
+class TestMviView: MviView<TestMviController, TestMviResult>() {
 
-    override var controller: TestMviController
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-        set(value) {}
+    override var controller: TestMviController = TestMviController(
+        TestMviState(listOf("")),
+        listOf(TestActionTransformer::class))
 
-
-    override fun render(result: TestMviResult) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    init {
+        Observable.just(TestMviIntent.TestClickIntent)
+            .map { it as TestMviIntent<TestMviAction> }
+            .onIntent()
     }
+
+
+
+    override fun render(result: TestMviResult) =
+        when(result){
+            TestMviResult.TestResult -> println(result)
+        }
+
+    private fun Observable<TestMviIntent<TestMviAction>>.onIntent() =
+        compose(controller.intent)
+            .subscribe(::render)
 
 }
